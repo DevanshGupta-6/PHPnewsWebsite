@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Score App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Live Score</h1>
+    <div id="scores">
+        (Team1): <span id="team1_score">0</span><br>
+        (Team2): <span id="team2_score">0</span><br>
+    </div>
+    <div id="updateSection">
+        <h2>Update Scores</h2>
+        Team 1 Score: <input type="number" id="team1_input" min="0"><br>
+        Team 2 Score: <input type="number" id="team2_input" min="0"><br>
+        <button id="updateButton">Update Scores</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function fetchScores() {
+                $.get('score.php', function(data) {
+                    const scores = JSON.parse(data);
+                    $('#team1_score').text(scores.team1_score);
+                    $('#team2_score').text(scores.team2_score);
+                });
+            }
+
+            // Fetch scores every 5 seconds
+            setInterval(fetchScores, 5000);
+            fetchScores(); // Initial fetch
+
+            // Function to update scores
+            $('#updateButton').click(function() {
+                const team1_score = $('#team1_input').val();
+                const team2_score = $('#team2_input').val();
+                $.post('score.php', { team1_score: team1_score, team2_score: team2_score }, function(response) {
+                    const result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        alert('Scores updated!');
+                        fetchScores(); // Refresh scores after update
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
