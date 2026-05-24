@@ -1,3 +1,5 @@
+To run this the minimum requirement is a basic knowledge of setting up and working with MySQL both locally and when Hosting it globally
+
 Make a SQL Database named "articles" and add appropriate columns namely:
 1. id (type: int)
 2. title (type: text)
